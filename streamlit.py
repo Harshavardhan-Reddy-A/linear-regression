@@ -1,6 +1,10 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+import warnings
+
+# Suppress pandas SettingWithCopyWarning, which can occur during complex filtering operations.
+warnings.filterwarnings('ignore', category=pd.core.common.SettingWithCopyWarning)
 
 # --- Constants ---
 ST_MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
@@ -84,9 +88,10 @@ def apply_styles():
             border-top: 2px solid #d9534f;
         }
 
-        @media(max-width:768px){
-            .header { flex-direction: column; }
-            .header-title { text-align:center; margin:10px 0; }
+        /* Category Split Styling (Emulating analysis.js bars) */
+        .category-bar-fill {
+            height: 100%; 
+            border-radius: 5px;
         }
         </style>
     """, unsafe_allow_html=True)
@@ -195,6 +200,7 @@ def manage_page():
 
     # --- Sidebar Filters ---
     st.sidebar.markdown('### Manage Scope')
+    # Using a key and ensuring we reset month selection if scope changes to yearly
     scope = st.sidebar.selectbox('Manage Scope', ['monthly', 'yearly'], key='manage_scope', 
                                  on_change=lambda: st.session_state.pop('selected_month_name', None) if st.session_state['manage_scope'] == 'yearly' else None)
     
@@ -259,6 +265,7 @@ def manage_page():
     waste_html += '</ul>'
     # FIX: Set unsafe_allow_html=True for the waste list content
     st.markdown(waste_html, unsafe_allow_html=True) 
+
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ----------------------------------------------------------------------
@@ -285,11 +292,18 @@ def analyze_page():
     
     week = None
     if scope == 'weekly':
+        # Determine max week based on selected year and month
+        month_index = ST_MONTH_NAMES.index(month_name) + 1 if month_name else 1
         max_week = df[
-            (df['Year'] == year) & (df['Month'] == ST_MONTH_NAMES.index(month_name) + 1)
+            (df['Year'] == year) & (df['Month'] == month_index)
         ]['WeekOfMonth'].max() if month_name else 5
         weeks = list(range(1, int(max_week) + 1))
-        week = st.sidebar.selectbox('Week', weeks, index=st.session_state.get('selected_week', 1)-1)
+        # Ensure default selection is within bounds
+        default_week = st.session_state.get('selected_week', 1)
+        if default_week not in weeks:
+            default_week = weeks[0] if weeks else 1
+            
+        week = st.sidebar.selectbox('Week', weeks, index=weeks.index(default_week))
     
     st.session_state['selected_year'] = year
     if month_name: st.session_state['selected_month_name'] = month_name
@@ -315,13 +329,14 @@ def analyze_page():
                 category = row['Category']
                 amount = row['Amount']
                 percentage = (amount / total_expense) * 100
+                # Color logic from analysis.js: highlight food/delivery/cab categories
                 color = '#ff7f0e' if any(w in category for w in ['Food', 'Delivery', 'Cab', 'Bar']) else '#d9534f'
                 
                 chart_html += f"""
                     <li style="margin-bottom: 5px;">
                         <strong>{category}:</strong> ${amount:.2f} ({percentage:.1f}%)
                         <div style="height: 10px; background-color: #eee; border-radius: 5px; margin-top: 3px;">
-                            <div style="width: {percentage:.1f}%; height: 100%; background-color: {color}; border-radius: 5px;"></div>
+                            <div class="category-bar-fill" style="width: {percentage:.1f}%; background-color: {color};"></div>
                         </div>
                     </li>
                 """
@@ -351,6 +366,7 @@ def analyze_page():
                 trend_data['Period'] = trend_data['WeekOfMonth'].apply(lambda w: f'Week {w}')
                 st.bar_chart(trend_data.set_index('Period')['Amount'], use_container_width=True)
             elif scope == 'weekly':
+                # Use standard line chart for daily trend as in original JS logic
                 trend_data = filtered_df.groupby('DateObj')['Amount'].sum().reset_index()
                 trend_data['Period'] = trend_data['DateObj'].dt.date
                 st.line_chart(trend_data.set_index('Period')['Amount'], use_container_width=True)
@@ -445,7 +461,7 @@ def predict_page():
         display_df['Next Year Total Forecast'] = display_df['Next Year Total Forecast'].apply(lambda x: f'${x:.2f}')
         display_df['MSE Loss'] = display_df['MSE Loss'].apply(lambda x: f'{x:.2f}')
         
-        # Custom HTML table rendering to include the TOTAL row (Streamlit doesn't easily support total rows in dataframes)
+        # Custom HTML table rendering to include the TOTAL row 
         table_html = """
         <table class="prediction-table">
             <thead>
