@@ -3,8 +3,10 @@ import pandas as pd
 import numpy as np
 import warnings
 
-# Suppress pandas SettingWithCopyWarning, which can occur during complex filtering operations.
-warnings.filterwarnings('ignore', category=pd.core.common.SettingWithCopyWarning)
+# --- FIX START ---
+# CORRECTED: Use pd.errors.SettingWithCopyWarning for modern Pandas versions
+warnings.filterwarnings('ignore', category=pd.errors.SettingWithCopyWarning)
+# --- FIX END ---
 
 # --- Constants ---
 ST_MONTH_NAMES = ["January", "February", "March", "April", "May", "June",
