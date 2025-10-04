@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpendWise - Monthly Usage</title>
+    <link rel="stylesheet" href="manager.css">
+</head>
+<body>
+    <header>
+        <button id="homeBtn" class="header-nav-btn">Home</button>
+        <div class="header-title">SpendWise</div>
+        <div class="nav-buttons">
+            <button id="manageBtn" class="header-nav-btn">Manage</button>
+            <button id="analyzeBtn" class="header-nav-btn">Analyze</button>
+            <button id="predictBtn" class="header-nav-btn">Predict</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <!-- REMOVED: Manage/Analyze/Predict buttons from sidebar -->
+            
+            <div class="period-select">
+                <!-- Analysis Scope Selector -->
+                <div class="period-item">
+                    <label for="scopeSelect">Manage Scope:</label>
+                    <select id="scopeSelect">
+                        <option value="monthly" selected>Monthly Analysis</option>
+                        <option value="yearly">Yearly Analysis</option>
+                    </select>
+                </div>
+                
+                <!-- Wrapped selectors for easier toggling -->
+                <div class="period-item" id="yearSelectorContainer">
+                    <label for="yearSelect">Year:</label>
+                    <select id="yearSelect"></select>
+                </div>
+
+                <div class="period-item" id="monthSelectorContainer">
+                    <label for="monthSelect">Month:</label>
+                    <select id="monthSelect"></select>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-area">
+            <h2 id="summaryTitle">Monthly Summary (Loading...)</h2>
+            <div class="summary-cards">
+                <div class="card full-width">
+                    <p>Total Spent:</p>
+                    <h3 id="totalSpent">$0</h3>
+                </div>
+
+                <!-- REMOVED: Suggested Savings Card -->
+            </div>
+            
+            <div id="wastedMoneyBox" class="card full-width"> 
+                <h3>💰 Where is the Money Wasted?</h3>
+                <div id="wastedContent"><p>Loading waste analysis...</p></div>
+            </div>
+            
+        </main>
+    </div>
+
+    <script src="manager.js"></script>
+    <script>
+        // Navigation redirects (Standardized)
+        document.getElementById('homeBtn').addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+        document.getElementById("manageBtn").addEventListener("click", () => {
+            window.location.href = "manager.html";
+        });
+        document.getElementById("analyzeBtn").addEventListener("click", () => {
+            window.location.href = "analysis.html";
+        });
+        document.getElementById("predictBtn").addEventListener("click", () => {
+            window.location.href = "prediction.html";
+        });
+    </script>
+</body>
+</html>

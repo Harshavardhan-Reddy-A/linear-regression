@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SpendWise - Prediction</title>
+    <link rel="stylesheet" href="prediction.css">
+    </head>
+<body>
+    <header>
+        <button id="homeBtn" class="header-nav-btn">Home</button>
+        <div class="header-title">SpendWise</div>
+        <div class="nav-buttons">
+            <button id="manageBtn" class="header-nav-btn">Manage</button>
+            <button id="analyzeBtn" class="header-nav-btn">Analyze</button>
+            <button id="predictBtn" class="header-nav-btn">Predict</button>
+        </div>
+    </header>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="prediction-select">
+                <div class="period-item">
+                    <label for="forecastMonth">Month to Forecast:</label>
+                    <input type="text" id="forecastMonth" value="Next Month" disabled>
+                    <label for="forecastYear">Yearly Projection:</label>
+                    <input type="text" id="forecastYear" value="Next Year" disabled>
+                    <button id="runForecastBtn">Run Linear Regression Forecast</button>
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-area">
+            <h2 id="predictionTitle">Spending Forecast</h2>
+            
+            <div class="card full-width"> 
+                <h3 id="resultsCardTitle">📈 Linear Regression Forecast Results</h3>
+                <div id="predictionResultContent">
+                    </div>
+            </div>
+            
+            <div class="card full-width" id="modelDetailsCard"> 
+                <h3>💡 Model Rationale: Simple Linear Regression</h3>
+                <div id="modelDetailsContent">
+                    <p>
+                        This forecast uses a **Pure JavaScript Linear Regression Model**. This method calculates a best-fit straight line through your monthly spending data points.
+                    </p>
+                    <p>
+                        It is the most stable method for basic trend prediction and avoids all complex asynchronous errors associated with external machine learning libraries.
+                    </p>
+                    <p>
+                        **Model Structure:**
+                        <ul>
+                            <li>**Method:** Simple Linear Regression ($y = mx + b$).</li>
+                            <li>**Input (x):** Month Sequence Number (1, 2, 3, ...).</li>
+                            <li>**Output (y):** Predicted Monthly Spending.</li>
+                        </ul>
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="prediction.js"></script>
+    <script>
+        // Navigation redirects (Standardized)
+        // NOTE: This logic is duplicated here for safety, but is also included in the new prediction.js file for better separation.
+        document.getElementById('homeBtn').addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+        document.getElementById("manageBtn").addEventListener("click", () => {
+            window.location.href = "manager.html";
+        });
+        document.getElementById("analyzeBtn").addEventListener("click", () => {
+            window.location.href = "analysis.html";
+        });
+        document.getElementById("predictBtn").addEventListener("click", () => {
+            window.location.href = "prediction.html";
+        });
+    </script>
+</body>
+</html>

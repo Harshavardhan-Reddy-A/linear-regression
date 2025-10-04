@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpendWise - Analysis</title>
+  <link rel="stylesheet" href="analysis.css">
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <button id="homeBtn" class="header-nav-btn">Home</button>
+    <div class="header-title">SpendWise</div>
+    <div class="nav-buttons">
+        <button id="manageBtn" class="header-nav-btn">Manage</button>
+        <button id="analyzeBtn" class="header-nav-btn">Analyze</button>
+        <button id="predictBtn" class="header-nav-btn">Predict</button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="container">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <!-- REMOVED: Manage/Analyze/Predict buttons from sidebar -->
+
+      <!-- NEW: Select Period and Scope -->
+      <div class="period-select">
+        <div class="period-item">
+            <label for="scopeSelect">Analysis Scope:</label>
+            <select id="scopeSelect">
+            <option value="monthly" selected>Monthly Analysis</option>
+            <option value="yearly">Yearly Analysis</option>
+            <option value="weekly">Weekly Analysis</option>
+            </select>
+        </div>
+        
+        <!-- WRAPPED SELECTORS FOR INDIVIDUAL HIDING (Fix for missing div bug) -->
+        <div class="period-item" id="yearSelectorContainer">
+            <label for="yearSelect" id="yearLabel">Year:</label>
+            <select id="yearSelect"></select>
+        </div>
+
+        <div class="period-item" id="monthSelectorContainer">
+            <label for="monthSelect" id="monthLabel">Month:</label>
+            <select id="monthSelect"></select>
+        </div>
+        
+        <div class="period-item" id="weekSelectorContainer" style="display: none;">
+            <label for="weekSelect" id="weekLabel">Week:</label>
+            <select id="weekSelect"></select>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main area -->
+    <main class="main-area">
+      <!-- Title updated by JS based on selection -->
+      <h2 id="analysisTitle">Monthly Analysis</h2>
+      
+      <div class="analysis-grid"> <!-- Container for responsive charts -->
+        <div class="card"> 
+          <h3>Split Up by Category</h3>
+          <div id="pieChart">[Category split will go here]</div>
+        </div>
+        <div class="card"> 
+          <h3 id="trendTitle">Weekly Spending Trend</h3>
+          <div id="trendGraph">[Trend graph will go here]</div>
+        </div>
+      </div>
+
+      <div class="card full-width"> 
+        <h3>Detailed Statement</h3>
+        <div class="table-container">
+          <table id="statementTable"></table>
+        </div>
+      </div>
+    </main>
+
+  </div>
+
+  <script src="analysis.js"></script>
+  <script>
+    // Navigation redirects
+    document.getElementById('homeBtn').addEventListener('click', () => {
+        window.location.href = 'index.html';
+    });
+    document.getElementById("manageBtn").addEventListener("click", () => {
+        window.location.href = "manager.html";
+    });
+    document.getElementById("analyzeBtn").addEventListener("click", () => {
+        window.location.href = "analysis.html";
+    });
+    document.getElementById("predictBtn").addEventListener("click", () => {
+        window.location.href = "prediction.html";
+    });
+  </script>
+</body>
+</html>
