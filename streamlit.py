@@ -257,7 +257,8 @@ def manage_page():
             </li>
         """
     waste_html += '</ul>'
-    st.markdown(waste_html, unsafe_allow_html=True)
+    # FIX: Set unsafe_allow_html=True for the waste list content
+    st.markdown(waste_html, unsafe_allow_html=True) 
     st.markdown('</div>', unsafe_allow_html=True)
 
 # ----------------------------------------------------------------------
@@ -288,7 +289,7 @@ def analyze_page():
             (df['Year'] == year) & (df['Month'] == ST_MONTH_NAMES.index(month_name) + 1)
         ]['WeekOfMonth'].max() if month_name else 5
         weeks = list(range(1, int(max_week) + 1))
-        week = st.sidebar.selectbox('Week', weeks, index=0)
+        week = st.sidebar.selectbox('Week', weeks, index=st.session_state.get('selected_week', 1)-1)
     
     st.session_state['selected_year'] = year
     if month_name: st.session_state['selected_month_name'] = month_name
@@ -325,7 +326,8 @@ def analyze_page():
                     </li>
                 """
             chart_html += '</ul>'
-            st.markdown(chart_html, unsafe_allow_html=True)
+            # FIX: Set unsafe_allow_html=True for the category split list content
+            st.markdown(chart_html, unsafe_allow_html=True) 
         st.markdown('</div>', unsafe_allow_html=True)
 
     with col2:
@@ -390,7 +392,7 @@ def predict_page():
         return
 
     # Create a global sequence number (prediction.js logic)
-    monthly_map = category_monthly.groupby(['Year', 'Month']).size().reset_index()
+    monthly_map = category_monthly.groupby(['Year', 'Month']).size().reset_index().sort_values(['Year', 'Month'])
     monthly_map['seq'] = monthly_map.index + 1
     category_monthly = pd.merge(category_monthly, monthly_map[['Year', 'Month', 'seq']], on=['Year', 'Month'])
 
@@ -406,7 +408,7 @@ def predict_page():
         try:
             m, b = np.polyfit(data['seq'], data['Amount'], 1)
         except np.linalg.LinAlgError:
-            m, b = 0, data['Amount'].mean() # Fallback to mean if only one point or linear fit fails
+            m, b = 0, data['Amount'].mean() # Fallback to mean if linear fit fails
         
         # Prediction for next month and next year (sequence N+1 and N+12)
         forecasted_month = max(0, m * next_sequence + b)
@@ -474,7 +476,8 @@ def predict_page():
             </tr>
         """
         table_html += '</tbody></table>'
-        st.markdown(table_html, unsafe_allow_html=True)
+        # FIX: Set unsafe_allow_html=True for the prediction table content
+        st.markdown(table_html, unsafe_allow_html=True) 
 
     st.markdown('</div>', unsafe_allow_html=True)
     
